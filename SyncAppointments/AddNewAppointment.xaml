@@ -1,0 +1,230 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="AddNewAppointment"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:eaea="clr-namespace:Epam.Activities.Exchange.Appointments;assembly=Epam.Activities.Exchange"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mewd="clr-namespace:Microsoft.Exchange.WebServices.Data;assembly=Microsoft.Exchange.WebServices"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:sd="clr-namespace:System.Data;assembly=System.Data"
+ xmlns:ui="http://schemas.uipath.com/workflow/activities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_Row" Type="InArgument(sd:DataRow)" />
+    <x:Property Name="in_OrganizerPassword" Type="InArgument(x:String)" />
+    <x:Property Name="in_OrganizerMail" Type="InArgument(x:String)" />
+    <x:Property Name="inOut_AppointmentId" Type="InOutArgument(x:String)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap2010:WorkflowViewState.IdRef>AddNewAppointment_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Epam.Activities.Exchange.Appointments</x:String>
+      <x:String>Microsoft.Exchange.WebServices.Data</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Epam.Activities.Exchange</AssemblyReference>
+      <AssemblyReference>Microsoft.Exchange.WebServices</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>System.Collections.Immutable</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Plugin.Workflow</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Add New Appointment Sequence" sap2010:WorkflowViewState.IdRef="Sequence_7">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="appointmentId" />
+      <Variable x:TypeArguments="mewd:AppointmentType" Name="meetingType" />
+      <Variable x:TypeArguments="scg:List(mewd:Attendee)" Name="requiredAttendees" />
+      <Variable x:TypeArguments="ui:GenericValue" Name="recurrenceData" />
+      <Variable x:TypeArguments="mewd:Recurrence" Name="reccurence" />
+      <Variable x:TypeArguments="mewd:DayOfTheWeek[]" Name="daysOfWeek" />
+    </Sequence.Variables>
+    <If Condition="[Boolean.Parse(in_Row(&quot;IsReccurent&quot;).ToString)]" DisplayName="Is Meeting Reccurent" sap2010:WorkflowViewState.IdRef="If_2">
+      <If.Then>
+        <Sequence DisplayName="Process Reccurent Meeting Sequence" sap2010:WorkflowViewState.IdRef="Sequence_9">
+          <Assign DisplayName="Assign Meetnig Type" sap2010:WorkflowViewState.IdRef="Assign_3">
+            <Assign.To>
+              <OutArgument x:TypeArguments="mewd:AppointmentType">[meetingType]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="mewd:AppointmentType">[AppointmentType.RecurringMaster]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <Sequence DisplayName="Setup Reccurence Sequence" sap2010:WorkflowViewState.IdRef="Sequence_8">
+            <Switch x:TypeArguments="x:Int32" DisplayName="Switch" Expression="[Integer.Parse(in_Row(&quot;RecurrenceType&quot;).ToString)]" sap2010:WorkflowViewState.IdRef="Switch`1_1">
+              <Sequence x:Key="2" sap2010:WorkflowViewState.IdRef="Sequence_10">
+                <Sequence.Variables>
+                  <Variable x:TypeArguments="ui:GenericValue" Name="interval" />
+                </Sequence.Variables>
+                <Assign sap2010:WorkflowViewState.IdRef="Assign_9">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="ui:GenericValue">[interval]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="ui:GenericValue">[1]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <Assign sap2010:WorkflowViewState.IdRef="Assign_6">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="ui:GenericValue">[recurrenceData]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="ui:GenericValue">[in_Row("RecurrenceData").ToString]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <Assign sap2010:WorkflowViewState.IdRef="Assign_8">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="mewd:DayOfTheWeek[]">[daysOfWeek]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="mewd:DayOfTheWeek[]" xml:space="preserve">[recurrenceData.
+Substring(recurrenceData.IndexOf("|") + 1).
+Split(","C).
+Select(Function (x) DirectCast([Enum].Parse(GetType(DayOfTheWeek), x), DayOfTheWeek)).
+ToArray()]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <Assign sap2010:WorkflowViewState.IdRef="Assign_7">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="mewd:Recurrence">[reccurence]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="mewd:Recurrence">[New Recurrence.WeeklyPattern(DateTime.Parse(in_Row("Start").ToString), interval, daysOfWeek)]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <Assign sap2010:WorkflowViewState.IdRef="Assign_10">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="s:Nullable(x:Int32)">[reccurence.NumberOfOccurrences]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="s:Nullable(x:Int32)">[Integer.Parse(recurrenceData.Substring(0, recurrenceData.IndexOf("|"C)))]</InArgument>
+                  </Assign.Value>
+                </Assign>
+              </Sequence>
+            </Switch>
+          </Sequence>
+        </Sequence>
+      </If.Then>
+      <If.Else>
+        <Assign DisplayName="Assign Meeting Type" sap2010:WorkflowViewState.IdRef="Assign_4">
+          <Assign.To>
+            <OutArgument x:TypeArguments="mewd:AppointmentType">[meetingType]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="mewd:AppointmentType">[AppointmentType.Single]</InArgument>
+          </Assign.Value>
+        </Assign>
+      </If.Else>
+    </If>
+    <Assign DisplayName="Assign Required Attendees" sap2010:WorkflowViewState.IdRef="Assign_5">
+      <Assign.To>
+        <OutArgument x:TypeArguments="scg:List(mewd:Attendee)">[requiredAttendees]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="scg:List(mewd:Attendee)">[in_Row("RequiredAttendees").ToString.Split(";"C).Select(Function (x) new Attendee(x)).ToList()]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <AddToCollection x:TypeArguments="mewd:Attendee" Collection="[requiredAttendees]" DisplayName="Add Organizer Mail To Required" sap2010:WorkflowViewState.IdRef="AddToCollection`1_1" Item="[new Attendee(in_Row(&quot;Organizer&quot;).ToString)]" />
+    <eaea:SaveAppointment Appointment="{x:Null}" ExchangeUrl="{x:Null}" Location="{x:Null}" AppointmentId="[inOut_AppointmentId]" AppointmentType="[meetingType]" Body="[in_Row(&quot;Agenda&quot;).ToString]" DisplayName="Save appointment" EndTime="[DateTime.Parse(in_Row(&quot;End&quot;).ToString)]" sap2010:WorkflowViewState.IdRef="SaveAppointment_2" IsBodyHtml="True" OptionalAttendees="[new Attendee(-1) {}]" OrganizerEmail="[in_OrganizerMail]" OrganizerPassword="[in_OrganizerPassword]" Recurrence="[reccurence]" RequiredAttendees="[requiredAttendees.ToArray]" StartTime="[DateTime.Parse(in_Row(&quot;Start&quot;).ToString)]" Subject="[in_Row(&quot;EventName&quot;).ToString]" />
+    <sads:DebugSymbol.Symbol>d11DOlxXb3JrXFByb2plY3RzXFByb2RcVWlQYXRoLUhhY2thdGhvblxVaVBhdGhTaG93Q2FzZVxTeW5jQXBwb2ludG1lbnRzXEFkZE5ld0FwcG9pbnRtZW50LnhhbWwvUQOyAQ4CAQFaBaYBCgIBG6cBBa4BDgIBGK8BBa8B+gECARWwAQWwAasFAgECWhNaTgIBHFwJmgEUAgEhnQEJpAESAgEdrAE/rAGfAQIBGqkBQKkBUwIBGa8BQa8BVgIBF68BvwGvAfcBAgEWsAG/BLAB9QQCARSwAZMBsAGiAQIBErAB9wGwAasCAgERsAHrArAB8QICARCwAYQDsAGbAwIBD7ABqAGwAc8BAgEOsAH+BLABqAUCAQ2wAasDsAG/AwIBC7AB0gOwAeoDAgEJsAGXBLABtAQCAQewAfYDsAGEBAIBBbABa7ABggECAQNdC2QUAgE5ZQuZARYCASKiAUCiAVgCASCfAUGfAU4CAR5iQmJjAgE8X0NfUAIBOmYNmAEWAgEjZk9mjQECASRnD5cBGgIBJWsRchoCATVzEXoaAgExexGGARoCAS2HARGOARoCASmPARGWARoCASZwQ3BGAgE4bURtTgIBNnhDeGYCATR1RHVUAgEyfUh9VAIBLowBQ4wBoQECASyJAUSJAVACASqUAUeUAZEBAgEokQFIkQFoAgEn</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Assign_3" sap:VirtualizedContainerService.HintSize="498,60" />
+      <sap2010:ViewStateData Id="Assign_9" sap:VirtualizedContainerService.HintSize="242,60" />
+      <sap2010:ViewStateData Id="Assign_6" sap:VirtualizedContainerService.HintSize="242,60" />
+      <sap2010:ViewStateData Id="Assign_8" sap:VirtualizedContainerService.HintSize="242,64" />
+      <sap2010:ViewStateData Id="Assign_7" sap:VirtualizedContainerService.HintSize="242,60" />
+      <sap2010:ViewStateData Id="Assign_10" sap:VirtualizedContainerService.HintSize="242,60" />
+      <sap2010:ViewStateData Id="Sequence_10" sap:VirtualizedContainerService.HintSize="264,588">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Switch`1_1" sap:VirtualizedContainerService.HintSize="476,772" />
+      <sap2010:ViewStateData Id="Sequence_8" sap:VirtualizedContainerService.HintSize="498,896">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_9" sap:VirtualizedContainerService.HintSize="520,1120">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="242,60" />
+      <sap2010:ViewStateData Id="If_2" sap:VirtualizedContainerService.HintSize="787,1268" />
+      <sap2010:ViewStateData Id="Assign_5" sap:VirtualizedContainerService.HintSize="787,60" />
+      <sap2010:ViewStateData Id="AddToCollection`1_1" sap:VirtualizedContainerService.HintSize="787,22" />
+      <sap2010:ViewStateData Id="SaveAppointment_2" sap:VirtualizedContainerService.HintSize="787,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_7" sap:VirtualizedContainerService.HintSize="809,1616">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="AddNewAppointment_1" sap:VirtualizedContainerService.HintSize="849,1736" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

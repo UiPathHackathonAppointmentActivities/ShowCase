@@ -1,0 +1,3 @@
+﻿Id,EventName,Organizer,RequiredAttendees,OprionalAttendees,Location,Agenda,Start,End,IsReccurent,RecurrenceType,RecurrenceData
+dada15d0-29eb-4177-b6ce-247c90061732,Some Event #1,organizer_mail@domen.com,attendee1_mail@domem.com;attendee2_mail@domem.com,,,"1. Learn how to do it
+2. Just do it",7/2/2019 10:00,7/2/2019 10:30,TRUE,2,"4|Monday,Friday"
